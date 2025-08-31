@@ -1,4 +1,4 @@
-﻿namespace IdentityServer.Services;
+﻿namespace IdentityServer.Api.Services;
 
 public class GoogleRegisterService
 {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 namespace IdentityServer.Api.Controllers;
 
 [ApiController]
+[Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly GoogleOptions _googleOptions;
@@ -34,7 +35,8 @@ public class AuthController : ControllerBase
             var response = await client.PostAsync(_googleOptions.TokenUrl, content);
 
             response.EnsureSuccessStatusCode();
-
+            var readAsStringAsync = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(readAsStringAsync);
             return Ok();
         }
     }

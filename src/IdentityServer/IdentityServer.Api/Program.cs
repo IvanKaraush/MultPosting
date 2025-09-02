@@ -22,8 +22,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(config => { config.EnableDeepLinking(); });
 }
 
-app.UseHttpsRedirection();
-
 app.MapControllers();
 
 app.Run();

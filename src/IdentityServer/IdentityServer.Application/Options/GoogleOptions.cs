@@ -1,4 +1,4 @@
-﻿namespace IdentityServer.Api.Options;
+﻿namespace IdentityServer.Application.Options;
 
 public class GoogleOptions
 {

@@ -1,8 +1,9 @@
 services:
-  postgres: 
+  postgres_support:
     image: postgres:latest
-    ports:
-      - "5433:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_IDENTITY_DB}
+      POSTGRES_USER: ${POSTGRES_IDENTITY_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_IDENTITY_PASSWORD}
+    ports:
+      - "${POSTGRES_IDENTITY_PORT}:5432"

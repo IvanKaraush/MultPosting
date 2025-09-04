@@ -1,5 +1,6 @@
 ﻿using Haley.Models;
-using IdentityServer.Api.Options;
+using IdentityServer.Application.Interfaces;
+using IdentityServer.Application.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -10,15 +11,19 @@ namespace IdentityServer.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly GoogleOptions _googleOptions;
+    private readonly IAuthService _authService;
 
-    public AuthController(IOptions<GoogleOptions> googleOptions)
+    public AuthController(IOptions<GoogleOptions> googleOptions, IAuthService authService)
     {
+        _authService = authService;
         _googleOptions = googleOptions.Value;
     }
 
     [HttpGet("sign-up")]
     public async Task<IActionResult> SignUp(string code)
     {
+        var token = await _authService.GenerateJwtTokenAsync("Test", "Test123");
+        return Ok(token);
         var formParams = new Dictionary<string, string>
         {
             ["client_id"] = _googleOptions.ClientId,
@@ -35,8 +40,7 @@ public class AuthController : ControllerBase
             var response = await client.PostAsync(_googleOptions.TokenUrl, content);
 
             response.EnsureSuccessStatusCode();
-            var readAsStringAsync = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(readAsStringAsync);
+
             return Ok();
         }
     }

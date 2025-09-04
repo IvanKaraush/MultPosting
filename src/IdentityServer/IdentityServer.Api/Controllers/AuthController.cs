@@ -22,8 +22,6 @@ public class AuthController : ControllerBase
     [HttpGet("sign-up")]
     public async Task<IActionResult> SignUp(string code)
     {
-        var token = await _authService.GenerateJwtTokenAsync("Test", "Test123");
-        return Ok(token);
         var formParams = new Dictionary<string, string>
         {
             ["client_id"] = _googleOptions.ClientId,

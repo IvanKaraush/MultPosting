@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Infrastructure;
+using IdentityServer.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,12 +21,7 @@ var host = Host.CreateDefaultBuilder(args)
                 optional: true);
         builder.AddEnvironmentVariables();
     })
-    .ConfigureServices((context, services) =>
-    {
-        var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<IdentityDbContext>(options =>
-            options.UseNpgsql(connectionString));
-    })
+    .ConfigureServices((context, services) => { services.RegisterInfrastructure(context.Configuration); })
     .ConfigureLogging(logging =>
     {
         logging.ClearProviders();
@@ -34,36 +30,27 @@ var host = Host.CreateDefaultBuilder(args)
     .Build();
 
 using var scope = host.Services.CreateScope();
-var services = scope.ServiceProvider;
-var logger = services.GetRequiredService<ILogger<Program>>();
+var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
 try
 {
-    var dbContext = services.GetRequiredService<IdentityDbContext>();
-    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>();
+    await dbContext.Database.MigrateAsync();
 
-    if (pendingMigrations.Any())
+    if (dbContext.Database.GetDbConnection() is NpgsqlConnection npgsqlConnection)
     {
-        logger.LogInformation("Выполняются миграции: {@Migrations}", pendingMigrations);
-        await dbContext.Database.MigrateAsync();
-        if (dbContext.Database.GetDbConnection() is NpgsqlConnection npgsqlConnection)
+        await npgsqlConnection.OpenAsync();
+        try
         {
-            await npgsqlConnection.OpenAsync();
-            try
-            {
-                await npgsqlConnection.ReloadTypesAsync();
-            }
-            finally
-            {
-                await npgsqlConnection.CloseAsync();
-            }
+            await npgsqlConnection.ReloadTypesAsync();
         }
-        logger.LogInformation("Миграции успешно применены.");
+        finally
+        {
+            await npgsqlConnection.CloseAsync();
+        }
     }
-    else
-    {
-        logger.LogInformation("Нет ожидающих миграций.");
-    }
+
+    logger.LogInformation("Миграции успешно применены.");
 }
 catch (Exception ex)
 {

@@ -8,8 +8,9 @@ public static class DependencyInjectionExtensions
 {
     public static void RegisterInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddNpgsql<IdentityDbContext>(configuration.GetConnectionString("DefaultConnection"));
+        services.AddNpgsql<ApplicationIdentityDbContext>(configuration.GetConnectionString("DefaultConnection"), 
+            x => x.MigrationsAssembly(typeof(ApplicationIdentityDbContext).Assembly));
         services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<IdentityDbContext>();
+            .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
     }
 }

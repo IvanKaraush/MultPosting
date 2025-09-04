@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
 
             response.EnsureSuccessStatusCode();
 
-            return Ok();
+            return Content("<!DOCTYPE html>\n<html>\n  <head>\n    <meta http-equiv=\"refresh\" content=\"0;url=multiposting://auth/callback\" />\n    <script>\n      window.location = \"multiposting://auth/callback\";\n    </script>\n  </head>\n  <body>\n    Redirecting…\n  </body>\n</html>", "text/html");
         }
     }
 

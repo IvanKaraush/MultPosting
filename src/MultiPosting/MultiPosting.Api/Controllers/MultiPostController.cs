@@ -17,7 +17,7 @@ public class MultiPostController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> AddAccountYoutube()
     {
-        await _youtubeService.AddAccountAsync();
-        return Ok();
+        var youtubeChannels = await _youtubeService.AddAccountAsync();
+        return Ok(youtubeChannels);
     }
 }

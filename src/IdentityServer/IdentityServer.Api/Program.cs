@@ -4,6 +4,7 @@ using IdentityServer.Application.Options;
 using IdentityServer.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Share.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration

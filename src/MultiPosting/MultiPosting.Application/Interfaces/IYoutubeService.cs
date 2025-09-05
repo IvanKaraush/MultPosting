@@ -1,6 +1,8 @@
-﻿namespace MultiPosting.Application.Interfaces;
+﻿using MultiPosting.Application.Dto;
+
+namespace MultiPosting.Application.Interfaces;
 
 public interface IYoutubeService
 {
-    Task AddAccountAsync();
+    Task<List<YouTubeChannelDto>> AddAccountAsync();
 }

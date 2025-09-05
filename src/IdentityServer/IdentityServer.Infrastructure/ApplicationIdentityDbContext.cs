@@ -9,4 +9,10 @@ public class ApplicationIdentityDbContext : IdentityDbContext<IdentityUser, Iden
     public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : base(options)
     {
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationIdentityDbContext).Assembly);
+        base.OnModelCreating(builder);
+    }
 }

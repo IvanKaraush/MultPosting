@@ -3,35 +3,53 @@ using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
+using Microsoft.Extensions.Options;
+using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
+using MultiPosting.Application.Options;
+using Share.Application.Options;
+using Shared.Infrastructure.Interfaces;
 
 namespace MultiPosting.Application.Services;
 
 public class YoutubeService : IYoutubeService
 {
-    private readonly YouTubeService _youtubeService;
+    private readonly MultiPostingOptions _multiPostingOptions;
+    private readonly GoogleOptions _googleOptions;
+    private readonly IHttpProvider _httpProvider;
 
-    public YoutubeService(YouTubeService youtubeService)
+    public YoutubeService(IHttpProvider httpProvider, IOptions<MultiPostingOptions> multiPostingOptions,
+        IOptions<GoogleOptions> googleOptions)
     {
-        _youtubeService = youtubeService;
+        _httpProvider = httpProvider;
+        _multiPostingOptions = multiPostingOptions.Value;
+        _googleOptions = googleOptions.Value;
     }
 
-    public async Task AddAccountAsync()
+    public async Task<List<YouTubeChannelDto>> AddAccountAsync()
     {
+        var token = await _httpProvider.SendGetAsync<AccessTokenResponse>(
+            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken", CancellationToken.None);
+        if (token == null)
+        {
+            // Get all channels using only youtube credentials
+            return [];
+        }
+
         var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
         {
             ClientSecrets = new ClientSecrets
             {
-                ClientId = "",
-                ClientSecret = ""
+                ClientId = _googleOptions.ClientId,
+                ClientSecret = _googleOptions.ClientSecret
             }
         });
 
         var tokenResponse = new TokenResponse
         {
-            AccessToken = "",
-            RefreshToken = "",
-            ExpiresInSeconds = 3600,                       // Set appropriately
+            AccessToken = token.Token,
+            RefreshToken = token.RefreshToken,
+            ExpiresInSeconds = 3600,
             Scope = "https://www.googleapis.com/auth/youtube.readonly",
             TokenType = "Bearer"
         };
@@ -44,14 +62,15 @@ public class YoutubeService : IYoutubeService
             ApplicationName = "MultiPostingApp"
         });
 
-        // Get all channels for logged-in user
         var request = youtubeService.Channels.List("id,snippet");
-        request.Mine = true; // <--- get channels from authenticated user
+        request.Mine = true;
         var response = await request.ExecuteAsync();
 
         foreach (var channel in response.Items)
         {
             Console.WriteLine($"Channel: {channel.Snippet.Title} (Id: {channel.Id})");
         }
+
+        return [];
     }
 }

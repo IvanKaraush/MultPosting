@@ -18,4 +18,9 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+      <ProjectReference Include="..\IdentityServer.Domain\IdentityServer.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

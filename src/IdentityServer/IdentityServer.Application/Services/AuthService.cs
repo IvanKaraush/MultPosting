@@ -9,10 +9,13 @@ using IdentityServer.Application.Helpers;
 using IdentityServer.Application.Interfaces;
 using IdentityServer.Application.Options;
 using IdentityServer.Application.Primitives;
+using IdentityServer.Domain.Entities;
+using IdentityServer.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Share.Application.Exceptions;
+using Share.Application.Options;
 using Shared.Infrastructure.Interfaces;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -24,12 +27,14 @@ public class AuthService : IAuthService
     private readonly JwtOptions _jwtOptions;
     private readonly GoogleOptions _googleOptions;
     private readonly IHttpProvider _httpProvider;
+    private readonly IAccessTokenRepository _accessTokenRepository;
 
     public AuthService(UserManager<IdentityUser> userManager, IOptions<JwtOptions> jwtOptions,
-        IOptions<GoogleOptions> googleOptions, IHttpProvider httpProvider)
+        IOptions<GoogleOptions> googleOptions, IHttpProvider httpProvider, IAccessTokenRepository accessTokenRepository)
     {
         _userManager = userManager;
         _httpProvider = httpProvider;
+        _accessTokenRepository = accessTokenRepository;
         _jwtOptions = jwtOptions.Value;
         _googleOptions = googleOptions.Value;
     }
@@ -77,10 +82,14 @@ public class AuthService : IAuthService
         var tokenResponse =
             await _httpProvider.SendPostAsync<FormUrlEncodedContent, TokenResponse>(_googleOptions.TokenUrl, content,
                 CancellationToken.None);
+        if (tokenResponse == null)
+        {
+            throw new BusinessLogicException(ExceptionMessages.ErrorWhileGetAccessToken);
+        }
 
         var headers = new Dictionary<string, string>
         {
-            { "Authoriation", $"Bearer {tokenResponse?.AccessToken}" }
+            { "Authoriation", $"Bearer {tokenResponse.AccessToken}" }
         };
         var userInfoResponse = await _httpProvider.SendPostAsync<FormUrlEncodedContent, GoogleUserInfoResponse>(
             _googleOptions.TokenUrl, content,
@@ -90,7 +99,12 @@ public class AuthService : IAuthService
             throw new BusinessLogicException(ExceptionMessages.ErrorWhileGettingEmailAddress);
         }
 
-        return await CreateUserAsync(userInfoResponse.Email, PasswordGenerator.Generate());
+        var jwt = await CreateUserAsync(userInfoResponse.Email, PasswordGenerator.Generate());
+        var accessToken = new AccessToken(Guid.NewGuid(), userInfoResponse.Email, tokenResponse.AccessToken, tokenResponse.RefreshToken);
+        await _accessTokenRepository.AddAsync(accessToken);
+        await _accessTokenRepository.SaveChangesAsync();
+
+        return jwt;
     }
 
     public string GenerateAuthorizationUrl()

@@ -23,38 +23,42 @@ public class AuthService : IAuthService
         _jwtOptions = jwtOptions.Value;
     }
 
-    public async Task<string> CreateUserAsync(string username, string password)
+    public async Task<string> CreateUserAsync(string email, string password)
     {
-        var user = await _userManager.FindByNameAsync(username);
+        var user = await _userManager.FindByEmailAsync(email);
         if (user != null)
         {
-            throw new UserAlreadyExistException(string.Format(ExceptionMessages.UserAlreadyExistMessage, username));
+            throw new UserAlreadyExistException(string.Format(ExceptionMessages.UserAlreadyExistMessage, email));
         }
 
-        var newUser = new IdentityUser(username);
+        var newUser = new IdentityUser(email);
         var result = await _userManager.CreateAsync(newUser, password);
         if (!result.Succeeded)
         {
             throw new Exception(); // todo: Handle exception
         }
-        return newUser.Id;
+        return GenerateJwt(newUser);
     }
 
-    public async Task<string> GenerateJwtTokenAsync(string username, string password)
+    public async Task<string> GenerateJwtTokenAsync(string email, string password)
     {
-        var user = await _userManager.FindByNameAsync(username);
+        var user = await _userManager.FindByNameAsync(email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, password))
         {
             return string.Empty; // todo: Throw exception
         }
 
+        return GenerateJwt(user);
+    }
+
+    private string GenerateJwt(IdentityUser user)
+    {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Name, user.UserName)
         };
-
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(issuer: _jwtOptions.ValidIssuer, audience: _jwtOptions.ValidAudience,

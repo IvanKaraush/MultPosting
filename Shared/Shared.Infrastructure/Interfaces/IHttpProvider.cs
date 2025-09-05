@@ -10,7 +10,8 @@ public interface IHttpProvider
         IDictionary<string, string>? headers = null,
         JsonSerializerOptions? options = null);
 
-    Task<TResponse?> SendPostAsync<TContent, TResponse>(string url, TContent content,
-        CancellationToken cancellationToken, IDictionary<string, string>? headers = null,
+    Task<TResponse?> SendPostAsync<TResponse>(string url,
+        HttpContent content, CancellationToken cancellationToken,
+        IDictionary<string, string>? headers = null,
         JsonSerializerOptions? options = null);
 }

@@ -7,4 +7,5 @@ public class GoogleOptions
     public required string RedirectUri { get; init; }
     public required string AuthorizationUrl { get; init; }
     public required string TokenUrl { get; init; }
+    public required string UserInfoUrl { get; init; }
 }

@@ -1,5 +1,6 @@
 using MultiPosting.Application.Extensions;
 using MultiPosting.Application.Options;
+using Share.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -15,6 +16,8 @@ builder.Services.AddControllers();
 
 builder.Services.RegisterApplication(builder.Configuration);
 builder.Services.Configure<YoutubeOptions>(builder.Configuration.GetSection(nameof(YoutubeOptions)));
+builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection(nameof(GoogleOptions)));
+builder.Services.Configure<MultiPostingOptions>(builder.Configuration.GetSection(nameof(MultiPostingOptions)));
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

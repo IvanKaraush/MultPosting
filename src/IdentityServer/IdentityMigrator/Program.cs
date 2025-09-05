@@ -1,4 +1,4 @@
-﻿using IdentityServer.Infrastructure;
+﻿using IdentityServer.Infrastructure.Context;
 using IdentityServer.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,21 +34,10 @@ var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
 try
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>();
-    await dbContext.Database.MigrateAsync();
-
-    if (dbContext.Database.GetDbConnection() is NpgsqlConnection npgsqlConnection)
-    {
-        await npgsqlConnection.OpenAsync();
-        try
-        {
-            await npgsqlConnection.ReloadTypesAsync();
-        }
-        finally
-        {
-            await npgsqlConnection.CloseAsync();
-        }
-    }
+    var applicationIdentityDbContext = scope.ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>();
+    var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await applicationIdentityDbContext.Database.MigrateAsync();
+    await applicationDbContext.Database.MigrateAsync();
 
     logger.LogInformation("Миграции успешно применены.");
 }

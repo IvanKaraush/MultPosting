@@ -1,13 +1,14 @@
 ﻿using IdentityServer.Domain.Entities;
+using IdentityServer.Infrastructure.Context;
 using IdentityServer.Infrastructure.Interfaces;
 using Shared.Infrastructure.Repositories;
 
 namespace IdentityServer.Infrastructure.Repositories;
 
-public class AccessTokenRepository : GenericRepository<ApplicationIdentityDbContext, AccessToken>,
+public class AccessTokenRepository : GenericRepository<ApplicationDbContext, AccessToken>,
     IAccessTokenRepository
 {
-    public AccessTokenRepository(ApplicationIdentityDbContext context) : base(context)
+    public AccessTokenRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }

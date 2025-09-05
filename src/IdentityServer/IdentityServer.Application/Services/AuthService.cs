@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using Haley.Models;
 using IdentityServer.Application.Dto;
 using IdentityServer.Application.Exceptions;
@@ -80,8 +81,11 @@ public class AuthService : IAuthService
         };
         var content = new FormUrlEncodedContent(formParams);
         var tokenResponse =
-            await _httpProvider.SendPostAsync<FormUrlEncodedContent, TokenResponse>(_googleOptions.TokenUrl, content,
-                CancellationToken.None);
+            await _httpProvider.SendPostAsync<TokenResponse>(_googleOptions.TokenUrl, content,
+                CancellationToken.None, options: new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+                });
         if (tokenResponse == null)
         {
             throw new BusinessLogicException(ExceptionMessages.ErrorWhileGetAccessToken);
@@ -89,18 +93,24 @@ public class AuthService : IAuthService
 
         var headers = new Dictionary<string, string>
         {
-            { "Authoriation", $"Bearer {tokenResponse.AccessToken}" }
+            { "Authorization", $"Bearer {tokenResponse.AccessToken}" }
         };
-        var userInfoResponse = await _httpProvider.SendPostAsync<FormUrlEncodedContent, GoogleUserInfoResponse>(
-            _googleOptions.TokenUrl, content,
-            CancellationToken.None, headers);
+
+        var userInfoResponse = await _httpProvider.SendGetAsync<GoogleUserInfoResponse>(
+            _googleOptions.UserInfoUrl,
+            CancellationToken.None, headers, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+            });
         if (userInfoResponse == null)
         {
             throw new BusinessLogicException(ExceptionMessages.ErrorWhileGettingEmailAddress);
         }
 
+        // todo: Use transaction (UoW)
         var jwt = await CreateUserAsync(userInfoResponse.Email, PasswordGenerator.Generate());
-        var accessToken = new AccessToken(Guid.NewGuid(), userInfoResponse.Email, tokenResponse.AccessToken, tokenResponse.RefreshToken);
+        var accessToken = new AccessToken(Guid.NewGuid(), userInfoResponse.Email, tokenResponse.AccessToken,
+            tokenResponse.RefreshToken);
         await _accessTokenRepository.AddAsync(accessToken);
         await _accessTokenRepository.SaveChangesAsync();
 
@@ -114,7 +124,9 @@ public class AuthService : IAuthService
             new("client_id", _googleOptions.ClientId),
             new("redirect_uri", _googleOptions.RedirectUri),
             new("response_type", "code"),
-            new("scope", "email profile")
+            new("scope", "email profile"),
+            new("access_type", "offline"),
+            new("prompt", "consent")
         };
         return _googleOptions.AuthorizationUrl + "?" + new QueryParamList(paramlist).GetConcatenatedString();
     }

@@ -54,7 +54,7 @@ public class AuthService : IAuthService
 
     public async Task<string> GenerateJwtTokenAsync(string email, string password)
     {
-        var user = await _userManager.FindByNameAsync(email);
+        var user = await _userManager.FindByEmailAsync(email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, password))
         {
             throw new InvalidCredentialsException(ExceptionMessages.InvalidCredentials);

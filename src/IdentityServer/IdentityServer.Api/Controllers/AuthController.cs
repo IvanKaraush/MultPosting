@@ -16,6 +16,12 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [HttpPost("sign-in")]
+    public async Task<IActionResult> SignIn([FromBody] CreateUserRequest request)
+    {
+        var jwt = await _authService.GenerateJwtTokenAsync(request.Email, request.Password);
+        return Ok(jwt);
+    }
 
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp([FromBody] CreateUserRequest request)

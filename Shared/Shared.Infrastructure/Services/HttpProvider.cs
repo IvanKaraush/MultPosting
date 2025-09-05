@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Shared.Infrastructure.Interfaces;
 
 namespace Shared.Infrastructure.Services;

@@ -15,7 +15,7 @@ public class AccessTokenController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAccessTokeByEmail([FromRoute] string email)
+    public async Task<IActionResult> GetAccessTokeByEmail([FromQuery] string email)
     {
         var accessToken = await _accessTokenService.GetAccessTokenByEmailAsync(email);
         return Ok(accessToken);

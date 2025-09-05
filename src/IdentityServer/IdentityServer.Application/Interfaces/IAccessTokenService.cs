@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+﻿using IdentityServer.Application.Dto;
 
 namespace IdentityServer.Application.Interfaces;
 
 public interface IAccessTokenService
 {
-    Task<AccessTokenResponse> GetAccessTokenByEmailAsync(string email);
+    Task<GetAccessTokenResponse> GetAccessTokenByEmailAsync(string email);
 }

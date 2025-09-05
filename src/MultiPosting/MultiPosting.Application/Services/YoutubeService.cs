@@ -1,4 +1,5 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using System.Text.Json;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Services;
@@ -26,10 +27,13 @@ public class YoutubeService : IYoutubeService
         _googleOptions = googleOptions.Value;
     }
 
-    public async Task<List<YouTubeChannelDto>> AddAccountAsync()
+    public async Task<List<YouTubeChannelDto>> AddAccountAsync(string email)
     {
         var token = await _httpProvider.SendGetAsync<AccessTokenResponse>(
-            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken", CancellationToken.None);
+            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={email}",  CancellationToken.None, options: new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
         if (token == null)
         {
             // Get all channels using only youtube credentials
@@ -41,7 +45,12 @@ public class YoutubeService : IYoutubeService
             ClientSecrets = new ClientSecrets
             {
                 ClientId = _googleOptions.ClientId,
-                ClientSecret = _googleOptions.ClientSecret
+                ClientSecret = _googleOptions.ClientSecret,
+            },
+            Scopes = new[] 
+            { 
+                "https://www.googleapis.com/auth/youtube.readonly",
+                "https://www.googleapis.com/auth/youtube"
             }
         });
 
@@ -50,7 +59,6 @@ public class YoutubeService : IYoutubeService
             AccessToken = token.Token,
             RefreshToken = token.RefreshToken,
             ExpiresInSeconds = 3600,
-            Scope = "https://www.googleapis.com/auth/youtube.readonly",
             TokenType = "Bearer"
         };
 

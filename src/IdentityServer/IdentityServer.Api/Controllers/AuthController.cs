@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using Haley.Models;
+using IdentityServer.Application.Dto;
 using IdentityServer.Application.Interfaces;
 using IdentityServer.Application.Options;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,15 @@ public class AuthController : ControllerBase
         _googleOptions = googleOptions.Value;
     }
 
-    [HttpGet("sign-up")]
+
+    [HttpPost("sign-up")]
+    public async Task<IActionResult> SignUp([FromBody] CreateUserRequest request)
+    {
+        var jwt = await _authService.CreateUserAsync(request.Email, request.Password);
+        return Ok(jwt);
+    }
+
+    [HttpGet("google-sign-up-redirect")]
     public async Task<IActionResult> SignUp(string code)
     {
         var formParams = new Dictionary<string, string>
@@ -56,6 +65,7 @@ public class AuthController : ControllerBase
             var user = JsonSerializer.Deserialize<Dictionary<string, object>>(userInfo);
             email = ((JsonElement)user["email"]).GetRawText();
         }
+
         var jwt = await _authService.CreateUserAsync(email, "TestPassword123@#%^");
 
         return Content(

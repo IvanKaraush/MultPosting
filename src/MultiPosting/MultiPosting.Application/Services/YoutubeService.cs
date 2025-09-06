@@ -30,7 +30,7 @@ public class YoutubeService : IYoutubeService
     public async Task<List<YouTubeChannelDto>> AddAccountAsync(string email)
     {
         var token = await _httpProvider.SendGetAsync<AccessTokenResponse>(
-            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={email}",  CancellationToken.None, options: new JsonSerializerOptions
+            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={email}", CancellationToken.None, options: new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
@@ -73,12 +73,16 @@ public class YoutubeService : IYoutubeService
         var request = youtubeService.Channels.List("id,snippet");
         request.Mine = true;
         var response = await request.ExecuteAsync();
-
+        var youtubeChannels = new List<YouTubeChannelDto>();
         foreach (var channel in response.Items)
         {
-            Console.WriteLine($"Channel: {channel.Snippet.Title} (Id: {channel.Id})");
+            youtubeChannels.Add(new YouTubeChannelDto
+            {
+                Title = channel.Snippet.Title,
+                Description = channel.Snippet.Description,
+            });
         }
 
-        return [];
+        return youtubeChannels;
     }
 }

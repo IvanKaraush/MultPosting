@@ -124,7 +124,7 @@ public class AuthService : IAuthService
             new("client_id", _googleOptions.ClientId),
             new("redirect_uri", _googleOptions.RedirectUri),
             new("response_type", "code"),
-            new("scope", "email profile"),
+            new("scope", "email profile https://www.googleapis.com/auth/youtube"),
             new("access_type", "offline"),
             new("prompt", "consent")
         };

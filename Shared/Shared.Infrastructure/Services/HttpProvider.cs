@@ -25,7 +25,7 @@ public class HttpProvider : IHttpProvider
         {
             using var response = await client.SendAsync(request, cancellationToken);
             var readAsStringAsync = await response.Content.ReadAsStringAsync(cancellationToken);
-
+            Console.WriteLine(readAsStringAsync);
             response.EnsureSuccessStatusCode();
             var jsonContent = await response.Content.ReadAsStringAsync(cancellationToken);
             return options == null
@@ -51,6 +51,7 @@ public class HttpProvider : IHttpProvider
 
         var response = await client.SendAsync(request, cancellationToken);
         var readAsStringAsync = await response.Content.ReadAsStringAsync(cancellationToken);
+            Console.WriteLine(readAsStringAsync);
 
         response.EnsureSuccessStatusCode();
 

@@ -1,26 +1,45 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Options;
 using MultiPosting.Application.Dto;
+using MultiPosting.Application.Interfaces;
+using MultiPosting.Application.Options;
 using Share.Application.Options;
+using Shared.Infrastructure.Interfaces;
 
 namespace MultiPosting.Application.Services;
 
-public class VkService
+public class VkService : IVkService
 {
     private readonly VkOptions _vkOptions;
+    private readonly MultiPostingOptions _multiPostingOptions;
+    private readonly IHttpProvider _httpProvider;
 
-    public VkService(IOptions<VkOptions> vkOptions)
+    public VkService(IOptions<VkOptions> vkOptions, IHttpProvider httpProvider,
+        IOptions<MultiPostingOptions> multiPostingOptions)
     {
+        _httpProvider = httpProvider;
+        _multiPostingOptions = multiPostingOptions.Value;
         _vkOptions = vkOptions.Value;
     }
 
-
-    public async Task<VkGroupDto[]> GetGroupsWhereUserIsAdminAsync()
+    public async Task<ICollection<UserResourceDto>> GetUserResourceAsync(string login)
     {
+        var token = await _httpProvider.SendGetAsync<AccessTokenResponse>(
+            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={login}", CancellationToken.None,
+            options: new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+        if (token == null)
+        {
+            return [];
+        }
+
         var url = $"https://api.vk.com/method/groups.get" +
-                  $"?access_token={_accessToken}" +
-                  $"&v={_apiVersion}" +
+                  $"?access_token={token.Token}" +
+                  $"&v={_vkOptions.Version}" +
                   $"&filter=admin" +
+                  $"&fields=photo_100,photo_max&" +
                   $"&extended=1";
         using (var client = new HttpClient())
         {
@@ -39,25 +58,21 @@ public class VkService
             if (doc.RootElement.TryGetProperty("response", out var resp))
             {
                 var items = resp.GetProperty("items");
-                var groups = new List<VkGroupDto>();
+                var groups = new List<UserResourceDto>();
                 foreach (var item in items.EnumerateArray())
                 {
-                    var g = new VkGroupDto
+                    var g = new UserResourceDto
                     {
-                        Id = item.GetProperty("id").GetInt64(),
                         Name = item.GetProperty("name").GetString(),
-                        ScreenName = item.GetProperty("screen_name").GetString(),
-                        IsClosed = item.GetProperty("is_closed").GetInt32(),
-                        Type = item.GetProperty("type").GetString()
+                        ThumbnailUrl = item.GetProperty("photo_max").GetString()
                     };
                     groups.Add(g);
                 }
 
                 return groups.ToArray();
             }
-
         }
-       
+
         return [];
     }
 }

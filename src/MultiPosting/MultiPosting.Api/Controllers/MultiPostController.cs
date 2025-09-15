@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
 
 namespace MultiPosting.Api.Controllers;
@@ -7,17 +8,18 @@ namespace MultiPosting.Api.Controllers;
 [Route("api/[controller]")]
 public class MultiPostController : ControllerBase
 {
-    private readonly IYoutubeService _youtubeService;
+    private readonly ISocialMediaFactory _socialMediaFactory;
 
-    public MultiPostController(IYoutubeService youtubeService)
+    public MultiPostController(ISocialMediaFactory socialMediaFactory)
     {
-        _youtubeService = youtubeService;
+        _socialMediaFactory = socialMediaFactory;
     }
 
     [HttpGet]
-    public async Task<IActionResult> AddAccountYoutube([FromQuery] string email)
+    public async Task<IActionResult> GetYouTubeChannels([FromQuery] GetUserInfoRequest request)
     {
-        var youtubeChannels = await _youtubeService.AddAccountAsync(email);
-        return Ok(youtubeChannels);
+        var socialMediaService = _socialMediaFactory.GetSocialMediaService(request.SocialMedia);
+        var userResources = await socialMediaService.GetUserResourceAsync(request.Login);
+        return Ok(userResources);
     }
 }

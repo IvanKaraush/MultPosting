@@ -1,7 +1,6 @@
+using System.Text.Json.Serialization;
 using MultiPosting.Application.Extensions;
-using MultiPosting.Application.Options;
 using MultiPosting.Infrastructure.Extensions;
-using Share.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -13,13 +12,20 @@ builder.Configuration
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(c => c.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.RegisterApplication(builder.Configuration);
 builder.Services.RegisterInfrastructure(builder.Configuration);
-builder.Services.Configure<YoutubeOptions>(builder.Configuration.GetSection(nameof(YoutubeOptions)));
-builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection(nameof(GoogleOptions)));
-builder.Services.Configure<MultiPostingOptions>(builder.Configuration.GetSection(nameof(MultiPostingOptions)));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -27,8 +33,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(config => { config.EnableDeepLinking(); });
 }
-
-app.UseHttpsRedirection();
 
 app.MapControllers();
 

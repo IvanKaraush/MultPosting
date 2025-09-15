@@ -1,9 +1,10 @@
-﻿namespace IdentityServer.Application.Interfaces;
+﻿using IdentityServer.Application.Dto;
+
+namespace IdentityServer.Application.Interfaces;
 
 public interface IAuthService
 {
-    Task<string> GoogleSignUpAsync(string code);
-    Task<string> CreateUserAsync(string email, string password);
-    Task<string> GenerateJwtTokenAsync(string email, string password);
-    string GenerateAuthorizationUrl();
+    Task<string> SignUpAsync(AuthRequest request, CancellationToken cancellationToken);
+    Task<string> SignInAsync();
+    Task<string> SignUpRedirectAsync(AuthRequest request, CancellationToken cancellationToken);
 }

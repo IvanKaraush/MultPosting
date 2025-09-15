@@ -27,16 +27,16 @@ public class YoutubeService : IYoutubeService
         _googleOptions = googleOptions.Value;
     }
 
-    public async Task<List<YouTubeChannelDto>> AddAccountAsync(string email)
+    public async Task<ICollection<UserResourceDto>> GetUserResourceAsync(string login)
     {
         var token = await _httpProvider.SendGetAsync<AccessTokenResponse>(
-            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={email}", CancellationToken.None, options: new JsonSerializerOptions
+            $"{_multiPostingOptions.IdentityServerUrl}/api/accesstoken?email={login}", CancellationToken.None,
+            options: new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         if (token == null)
         {
-            // Get all channels using only youtube credentials
             return [];
         }
 
@@ -47,8 +47,8 @@ public class YoutubeService : IYoutubeService
                 ClientId = _googleOptions.ClientId,
                 ClientSecret = _googleOptions.ClientSecret,
             },
-            Scopes = new[] 
-            { 
+            Scopes = new[]
+            {
                 "https://www.googleapis.com/auth/youtube.readonly",
                 "https://www.googleapis.com/auth/youtube"
             }
@@ -73,13 +73,16 @@ public class YoutubeService : IYoutubeService
         var request = youtubeService.Channels.List("id,snippet");
         request.Mine = true;
         var response = await request.ExecuteAsync();
-        var youtubeChannels = new List<YouTubeChannelDto>();
+        var youtubeChannels = new List<UserResourceDto>();
         foreach (var channel in response.Items)
         {
-            youtubeChannels.Add(new YouTubeChannelDto
+            var thumbnailUrl = channel.Snippet?.Thumbnails?.High?.Url 
+                               ?? channel.Snippet?.Thumbnails?.Medium?.Url 
+                               ?? channel.Snippet?.Thumbnails?.Default__?.Url; 
+            youtubeChannels.Add(new UserResourceDto
             {
-                Title = channel.Snippet.Title,
-                Description = channel.Snippet.Description,
+                Name = channel.Snippet.Title,
+                ThumbnailUrl = thumbnailUrl
             });
         }
 

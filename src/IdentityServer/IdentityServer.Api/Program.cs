@@ -1,10 +1,10 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using IdentityServer.Application.Extensions;
 using IdentityServer.Application.Options;
 using IdentityServer.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Share.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -16,10 +16,9 @@ builder.Configuration
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.RegisterInfrastructure(builder.Configuration);
 builder.Services.RegisterApplication(builder.Configuration);
-builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection(nameof(GoogleOptions)));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

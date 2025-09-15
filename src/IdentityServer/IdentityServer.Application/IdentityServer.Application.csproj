@@ -19,4 +19,8 @@
         <ProjectReference Include="..\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Factories\" />
+    </ItemGroup>
+
 </Project>

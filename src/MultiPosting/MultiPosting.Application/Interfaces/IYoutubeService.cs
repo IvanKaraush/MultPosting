@@ -1,8 +1,5 @@
-﻿using MultiPosting.Application.Dto;
+﻿namespace MultiPosting.Application.Interfaces;
 
-namespace MultiPosting.Application.Interfaces;
-
-public interface IYoutubeService
+public interface IYoutubeService : ISocialMediaService
 {
-    Task<List<YouTubeChannelDto>> AddAccountAsync(string email);
 }

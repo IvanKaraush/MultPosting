@@ -15,23 +15,14 @@ public class AuthServiceFactory : IAuthServiceFactory
 
     public IAuthService GetAuthService(SocialMedia socialMedia)
     {
-        switch (socialMedia)
+        return socialMedia switch
         {
-            case SocialMedia.None:
-                return _serviceProvider.GetRequiredService<AuthService>();
-            case SocialMedia.YouTube:
-                return _serviceProvider.GetRequiredService<GoogleAuthService>();
-            case SocialMedia.Instagram:
-            case SocialMedia.TikTok:
-                break;
-            case SocialMedia.Vk:
-                return _serviceProvider.GetRequiredService<VkAuthService>();
-            case SocialMedia.Google:
-                return _serviceProvider.GetRequiredService<GoogleAuthService>();
-            default:
-                return _serviceProvider.GetRequiredService<AuthService>();
-        }
-
-        throw new ArgumentOutOfRangeException(nameof(socialMedia), socialMedia, null);
+            SocialMedia.None => _serviceProvider.GetRequiredService<AuthService>(),
+            SocialMedia.YouTube => _serviceProvider.GetRequiredService<GoogleAuthService>(),
+            SocialMedia.TikTok => _serviceProvider.GetRequiredService<TikTokAuthService>(),
+            SocialMedia.Vk => _serviceProvider.GetRequiredService<VkAuthService>(),
+            SocialMedia.Google => _serviceProvider.GetRequiredService<GoogleAuthService>(),
+            _ => _serviceProvider.GetRequiredService<AuthService>()
+        };
     }
 }

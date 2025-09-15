@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
-using MultiPosting.Application.Options;
 using Share.Application.Options;
 using Shared.Infrastructure.Interfaces;
 

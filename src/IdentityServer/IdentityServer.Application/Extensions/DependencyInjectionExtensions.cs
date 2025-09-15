@@ -21,11 +21,13 @@ public static class DependencyInjectionExtensions
         services.AddScoped<AuthService>();
         services.AddScoped<GoogleAuthService>();
         services.AddScoped<VkAuthService>();
+        services.AddScoped<TikTokAuthService>();
         services.AddMappings();
         services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
         services.Configure<VkOptions>(configuration.GetSection(nameof(VkOptions)));
         services.Configure<GoogleOptions>(configuration.GetSection(nameof(GoogleOptions)));
         services.Configure<MultiPostingOptions>(configuration.GetSection(nameof(MultiPostingOptions)));
+        services.Configure<TikTokOptions>(configuration.GetSection(nameof(TikTokOptions)));
     }
 
     private static void AddMappings(this IServiceCollection services)

@@ -17,7 +17,7 @@ public class ProjectService : IProjectService
         _projectRepository = projectRepository;
     }
 
-    public async Task<GetUserResourcesByProjectIdResponse> GetUserResourcesByProjectId(Guid projectId)
+    public async Task<GetUserResourcesByProjectIdResponse> GetUserResourcesByProjectIdAsync(Guid projectId)
     {
         var project = await _projectRepository.GetFullById(projectId)
                       ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound,
@@ -34,13 +34,23 @@ public class ProjectService : IProjectService
         return project.Id;
     }
 
-    public async Task CreateUserResourcesToProject(CreateUserResourceRequest request)
+    public async Task CreateUserResourcesToProjectAsync(CreateUserResourceRequest request)
     {
         var project = await _projectRepository.GetFullById(request.ProjectId)
                       ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound,
                           request.ProjectId));
         request.UserResourcesDto.ForEach(c =>
             project.AddUserResourceIfNotExist(Guid.NewGuid(), c.Name, c.ImageUrl, c.IsSelected));
+        await _projectRepository.SaveChangesAsync();
+    }
+
+    public async Task DeleteUserResourcesFromProjectAsync(DeleteUserResourceRequest request)
+    {
+        var project = await _projectRepository.GetFullById(request.ProjectId)
+                      ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound,
+                          request.ProjectId));
+
+        project.DeleteUserResource(request.UserResourceId);
         await _projectRepository.SaveChangesAsync();
     }
 }

@@ -1,4 +1,6 @@
-﻿using Shared.Domain.Entities;
+﻿using MultPosting.Domain.Primitives;
+using Shared.Domain.Entities;
+using Shared.Domain.Exceptions;
 
 namespace MultPosting.Domain.Entities;
 
@@ -26,5 +28,16 @@ public class Project : BaseEntity
         {
             _userResources.Add(new UserResource(id, name, imageUrl, isSelected));
         }
+    }
+
+    public void DeleteUserResource(Guid id)
+    {
+        var userResource = _userResources.FirstOrDefault(c => c.Id == id);
+        if (userResource == null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound, id));
+        }
+
+        _userResources.Remove(userResource);
     }
 }

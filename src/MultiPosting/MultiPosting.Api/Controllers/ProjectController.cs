@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.Internal;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
 
@@ -19,7 +18,7 @@ public class ProjectController : ControllerBase
     [HttpGet("{projectId:guid}")]
     public async Task<IActionResult> GetUserResources(Guid projectId)
     {
-        var userResources = await _projectService.GetUserResourcesByProjectId(projectId);
+        var userResources = await _projectService.GetUserResourcesByProjectIdAsync(projectId);
         return Ok(userResources);
     }
 
@@ -33,7 +32,14 @@ public class ProjectController : ControllerBase
     [HttpPost("user-resources")]
     public async Task<IActionResult> CreateUserResource([FromBody] CreateUserResourceRequest request)
     {
-        await _projectService.CreateUserResourcesToProject(request);
+        await _projectService.CreateUserResourcesToProjectAsync(request);
+        return NoContent();
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserResource([FromQuery] DeleteUserResourceRequest request)
+    {
+        await _projectService.DeleteUserResourcesFromProjectAsync(request);
         return NoContent();
     }
 }

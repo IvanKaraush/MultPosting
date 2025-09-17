@@ -15,7 +15,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.HasMany(p => p.UserResources)
             .WithOne()
-            .HasForeignKey(w => w.Id)
+            .HasForeignKey(w => w.ProjectId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
     }

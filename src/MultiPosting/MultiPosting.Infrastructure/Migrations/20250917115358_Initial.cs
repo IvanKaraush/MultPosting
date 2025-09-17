@@ -30,18 +30,24 @@ namespace MultiPosting.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: false),
-                    IsSelected = table.Column<bool>(type: "boolean", nullable: false)
+                    IsSelected = table.Column<bool>(type: "boolean", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserResource", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserResource_Project_Id",
-                        column: x => x.Id,
+                        name: "FK_UserResource_Project_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserResource_ProjectId",
+                table: "UserResource",
+                column: "ProjectId");
         }
 
         /// <inheritdoc />

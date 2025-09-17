@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Options;
 using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
-using Shared.Application.Exceptions;
 using Shared.Application.Options;
-using Shared.Application.Primitives;
 using Shared.Infrastructure.Interfaces;
 
 namespace MultiPosting.Application.Services;

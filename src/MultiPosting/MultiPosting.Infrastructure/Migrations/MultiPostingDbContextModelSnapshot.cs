@@ -52,7 +52,12 @@ namespace MultiPosting.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("UserResource", (string)null);
                 });
@@ -61,7 +66,7 @@ namespace MultiPosting.Infrastructure.Migrations
                 {
                     b.HasOne("MultPosting.Domain.Entities.Project", null)
                         .WithMany("UserResources")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

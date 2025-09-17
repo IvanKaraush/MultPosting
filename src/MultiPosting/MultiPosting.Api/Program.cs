@@ -14,7 +14,8 @@ builder.Configuration
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers().AddJsonOptions(c => c.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddControllers()
+    .AddJsonOptions(c => c.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.RegisterApplication(builder.Configuration);
 builder.Services.RegisterInfrastructure(builder.Configuration);
@@ -35,6 +36,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(config => { config.EnableDeepLinking(); });
 }
+
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var projectRepository = scope.ServiceProvider.GetRequiredService<IProjectRepository>();
+        var projectId = Guid.Parse("6C22B3EF-C512-485D-877F-F7E67D3F2E5E");
+        var project = await projectRepository.GetByIdAsync(projectId);
+        if (project == null)
+        {
+            await projectRepository.AddAsync(new Project(projectId, "Test"));
+            await projectRepository.SaveChangesAsync();
+        }
+    }
+});
 
 app.MapControllers();
 

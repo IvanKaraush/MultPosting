@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MultiPosting.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiPostingDbContext))]
-    [Migration("20250917074147_Initial")]
+    [Migration("20250917115358_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -55,7 +55,12 @@ namespace MultiPosting.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("UserResource", (string)null);
                 });
@@ -64,7 +69,7 @@ namespace MultiPosting.Infrastructure.Migrations
                 {
                     b.HasOne("MultPosting.Domain.Entities.Project", null)
                         .WithMany("UserResources")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

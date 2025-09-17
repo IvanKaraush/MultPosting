@@ -1,4 +1,4 @@
-﻿namespace Share.Application.Options;
+﻿namespace Shared.Application.Options;
 
 public class MultiPostingOptions
 {

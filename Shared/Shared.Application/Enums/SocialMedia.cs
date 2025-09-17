@@ -1,4 +1,4 @@
-﻿namespace Share.Application.Enums;
+﻿namespace Shared.Application.Enums;
 
 public enum SocialMedia
 {

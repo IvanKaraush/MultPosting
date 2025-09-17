@@ -1,4 +1,4 @@
-﻿using Share.Application.Enums;
+﻿using Shared.Application.Enums;
 
 namespace MultiPosting.Application.Interfaces;
 

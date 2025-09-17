@@ -38,7 +38,7 @@ try
     await applicationIdentityDbContext.Database.MigrateAsync();
     await applicationDbContext.Database.MigrateAsync();
 
-    logger.LogInformation("Миграции успешно применены.");
+    logger.LogInformation("Миграции успешно применены");
 }
 catch (Exception ex)
 {

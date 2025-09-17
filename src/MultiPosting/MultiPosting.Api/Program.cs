@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using MultiPosting.Application.Extensions;
 using MultiPosting.Infrastructure.Extensions;
+using MultiPosting.Infrastructure.Interfaces;
+using MultPosting.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration

@@ -1,4 +1,4 @@
-﻿namespace Share.Application.Options;
+﻿namespace Shared.Application.Options;
 
 public class TikTokOptions
 {
@@ -8,4 +8,5 @@ public class TikTokOptions
     public string AuthorizationUrl { get; init; }
     public string UserInfoUrl { get; init; }
     public string TokenUrl { get; init; }
+    public string RedirectApplicationUrl { get; init; }
 }

@@ -28,11 +28,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{6E06AB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infrastructure", "Shared\Shared.Infrastructure\Shared.Infrastructure.csproj", "{7DF70B69-703C-4856-93B8-CCF84FCE2BB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share.Application", "Shared\Share.Application\Share.Application.csproj", "{1BB3CA1B-9328-4AE3-AE53-38652246A8E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application", "Shared\Shared.Application\Shared.Application.csproj", "{1BB3CA1B-9328-4AE3-AE53-38652246A8E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Domain", "src\IdentityServer\IdentityServer.Domain\IdentityServer.Domain.csproj", "{96ECCA8C-30E0-4FA7-929B-B62E170C339C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Domain", "Shared\Shared.Domain\Shared.Domain.csproj", "{A58A6972-DC7F-4722-B4FB-CEC21D200F46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultPosting.Domain", "src\MultiPosting\MultPosting.Domain\MultPosting.Domain.csproj", "{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultPosting.Migrator", "MultPosting.Migrator\MultPosting.Migrator.csproj", "{29FD7F5D-3469-4F22-847A-FB9A062D3912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +88,14 @@ Global
 		{A58A6972-DC7F-4722-B4FB-CEC21D200F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A58A6972-DC7F-4722-B4FB-CEC21D200F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A58A6972-DC7F-4722-B4FB-CEC21D200F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29FD7F5D-3469-4F22-847A-FB9A062D3912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29FD7F5D-3469-4F22-847A-FB9A062D3912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29FD7F5D-3469-4F22-847A-FB9A062D3912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29FD7F5D-3469-4F22-847A-FB9A062D3912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4F0E46E7-81E9-430B-A73A-22FB31785A8C} = {163551FC-DDF0-411B-A19F-D2D6C1ED628C}
@@ -97,5 +109,7 @@ Global
 		{1BB3CA1B-9328-4AE3-AE53-38652246A8E1} = {6E06ABD6-9882-4822-8EFE-220B836DBA9D}
 		{96ECCA8C-30E0-4FA7-929B-B62E170C339C} = {655B8717-2580-4887-AE1C-AE060D6F6ADF}
 		{A58A6972-DC7F-4722-B4FB-CEC21D200F46} = {6E06ABD6-9882-4822-8EFE-220B836DBA9D}
+		{8F3D92E5-374E-4B69-B9B8-FFD4E83897A0} = {163551FC-DDF0-411B-A19F-D2D6C1ED628C}
+		{29FD7F5D-3469-4F22-847A-FB9A062D3912} = {163551FC-DDF0-411B-A19F-D2D6C1ED628C}
 	EndGlobalSection
 EndGlobal

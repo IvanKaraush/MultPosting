@@ -7,9 +7,9 @@ using IdentityServer.Application.Primitives;
 using IdentityServer.Domain.Entities;
 using IdentityServer.Infrastructure.Interfaces;
 using Microsoft.Extensions.Options;
-using Share.Application.Enums;
-using Share.Application.Exceptions;
-using Share.Application.Options;
+using Shared.Application.Enums;
+using Shared.Application.Exceptions;
+using Shared.Application.Options;
 using Shared.Infrastructure.Interfaces;
 
 namespace IdentityServer.Application.Services;
@@ -71,7 +71,7 @@ public class VkAuthService : IAuthService
             new AccessToken(Guid.NewGuid(), phone, tokenResponse.AccessToken, tokenResponse.RefreshToken);
         await _accessTokenRepository.AddAsync(accessToken, cancellationToken);
         await _accessTokenRepository.SaveChangesAsync(cancellationToken);
-        return string.Format(_multiPostingOptions.RedirectContent, $"{_multiPostingOptions.RedirectUrl}?id={phone}");
+        return string.Format(_multiPostingOptions.RedirectContent, $"{_vkOptions.RedirectApplicationUrl}?id={phone}&social_media={SocialMedia.Vk}");
     }
 
     private string GetAuthorizationUrl()

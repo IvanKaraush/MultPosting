@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
-using Share.Application.Options;
+using Shared.Application.Options;
 using Shared.Infrastructure.Interfaces;
 
 namespace MultiPosting.Application.Services;
@@ -63,7 +63,7 @@ public class VkService : IVkService
                     var g = new UserResourceDto
                     {
                         Name = item.GetProperty("name").GetString(),
-                        ThumbnailUrl = item.GetProperty("photo_max").GetString()
+                        ImageUrl = item.GetProperty("photo_max").GetString()
                     };
                     groups.Add(g);
                 }

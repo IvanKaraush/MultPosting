@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiPosting.Application.Interfaces;
 using MultiPosting.Application.Services;
-using Share.Application.Enums;
+using Shared.Application.Enums;
 
 namespace MultiPosting.Application.Factories;
 
@@ -20,12 +20,19 @@ public class SocialMediaFactory : ISocialMediaFactory
         {
             case SocialMedia.None:
                 break;
+            case SocialMedia.TikTok:
+                return _serviceProvider.GetRequiredService<TikTokService>();
+                break;
             case SocialMedia.YouTube:
                 return _serviceProvider.GetRequiredService<YoutubeService>();
-            case SocialMedia.Instagram or SocialMedia.TikTok:
+            case SocialMedia.Instagram:
                 break;
             case SocialMedia.Vk:
                 return _serviceProvider.GetRequiredService<VkService>();
+            case SocialMedia.Google:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(socialMedia), socialMedia, null);
         }
 
         throw new ArgumentOutOfRangeException(nameof(socialMedia), socialMedia, null);

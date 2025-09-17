@@ -9,9 +9,9 @@ using IdentityServer.Domain.Entities;
 using IdentityServer.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Share.Application.Enums;
-using Share.Application.Exceptions;
-using Share.Application.Options;
+using Shared.Application.Enums;
+using Shared.Application.Exceptions;
+using Shared.Application.Options;
 using Shared.Infrastructure.Interfaces;
 
 namespace IdentityServer.Application.Services;
@@ -68,7 +68,7 @@ public class GoogleAuthService : BaseAuthService, IAuthService
             tokenResponse.RefreshToken);
         await _accessTokenRepository.AddAsync(accessToken, cancellationToken);
         await _accessTokenRepository.SaveChangesAsync(cancellationToken);
-        return string.Format(_multiPostingOptions.RedirectContent, $"{_multiPostingOptions.RedirectUrl}?jwt={jwt}");
+        return string.Format(_multiPostingOptions.RedirectContent, $"{_googleOptions.RedirectApplicationUrl}?jwt={jwt}");
     }
 
     private string GetAuthorizationUrl()

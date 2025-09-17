@@ -1,12 +1,14 @@
-﻿using Google.Apis.Services;
+﻿using System.Reflection;
+using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MultiPosting.Application.Factories;
 using MultiPosting.Application.Interfaces;
 using MultiPosting.Application.Options;
 using MultiPosting.Application.Services;
-using Share.Application.Options;
+using Shared.Application.Options;
 
 namespace MultiPosting.Application.Extensions;
 
@@ -25,10 +27,22 @@ public static class DependencyInjectionExtensions
 
         services.AddScoped<YoutubeService>();
         services.AddScoped<VkService>();
+        services.AddScoped<TikTokService>();
         services.AddScoped<ISocialMediaFactory, SocialMediaFactory>();
+        services.AddScoped<IProjectService, ProjectService>();
         services.Configure<YoutubeOptions>(configuration.GetSection(nameof(YoutubeOptions)));
         services.Configure<GoogleOptions>(configuration.GetSection(nameof(GoogleOptions)));
         services.Configure<VkOptions>(configuration.GetSection(nameof(VkOptions)));
         services.Configure<MultiPostingOptions>(configuration.GetSection(nameof(MultiPostingOptions)));
+        services.Configure<TikTokOptions>(configuration.GetSection(nameof(TikTokOptions)));
+        AddMappings(services);
+    }
+
+    private static void AddMappings(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
     }
 }

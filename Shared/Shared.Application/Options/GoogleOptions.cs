@@ -1,4 +1,4 @@
-﻿namespace Share.Application.Options;
+﻿namespace Shared.Application.Options;
 
 public class GoogleOptions
 {
@@ -8,4 +8,5 @@ public class GoogleOptions
     public required string AuthorizationUrl { get; init; }
     public required string TokenUrl { get; init; }
     public required string UserInfoUrl { get; init; }
+    public required string RedirectApplicationUrl { get; init; }
 }

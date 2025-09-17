@@ -32,10 +32,10 @@ public abstract class BaseAuthService
 
         var newUser = new IdentityUser(email);
         var result = await _userManager.CreateAsync(newUser, password);
-        if (!result.Succeeded)
-        {
-            throw new Exception(string.Join(", ", result.Errors)); // todo: Handle exception
-        }
+        // if (!result.Succeeded)
+        // {
+        //     throw new Exception(string.Join(", ", result.Errors)); // todo: Handle exception
+        // }
 
         return GenerateJwt(newUser);
     }

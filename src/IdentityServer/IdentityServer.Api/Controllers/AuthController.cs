@@ -1,7 +1,7 @@
 ﻿using IdentityServer.Application.Dto;
 using IdentityServer.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Share.Application.Enums;
+using Shared.Application.Enums;
 
 namespace IdentityServer.Api.Controllers;
 
@@ -40,6 +40,6 @@ public class AuthController : ControllerBase
         var authService = _authServiceFactory.GetAuthService(request.State);
 
         var content = await authService.SignUpRedirectAsync(request, cancellationToken);
-        return Content(content);
+        return Content(content, "text/html; charset=utf-8");
     }
 }

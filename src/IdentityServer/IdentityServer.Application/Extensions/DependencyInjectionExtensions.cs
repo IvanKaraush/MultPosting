@@ -7,7 +7,7 @@ using IdentityServer.Infrastructure.Repositories;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Share.Application.Options;
+using Shared.Application.Options;
 
 namespace IdentityServer.Application.Extensions;
 

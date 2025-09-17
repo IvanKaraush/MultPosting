@@ -7,9 +7,9 @@ using IdentityServer.Domain.Entities;
 using IdentityServer.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Share.Application.Enums;
-using Share.Application.Exceptions;
-using Share.Application.Options;
+using Shared.Application.Enums;
+using Shared.Application.Exceptions;
+using Shared.Application.Options;
 using Shared.Infrastructure.Interfaces;
 
 namespace IdentityServer.Application.Services;
@@ -69,15 +69,15 @@ public class TikTokAuthService : BaseAuthService, IAuthService
         };
 
         var response = await _httpProvider.SendGetAsync<TikTokUserInfoResponse>(
-            $"{_tikTokOptions.UserInfoUrl}?fields={Uri.EscapeDataString("open_id,display_name")}", cancellationToken,
+            $"{_tikTokOptions.UserInfoUrl}?fields={Uri.EscapeDataString("open_id")}", cancellationToken,
             headers, jsonOptions) ?? throw new BusinessLogicException(ExceptionMessages.ErrorWhileGetUserInfo);
 
-        var accessToken = new AccessToken(Guid.NewGuid(), response.Data.User.DisplayName, tokenResponse.AccessToken,
+        var accessToken = new AccessToken(Guid.NewGuid(), response.Data.User.OpenId, tokenResponse.AccessToken,
             tokenResponse.RefreshToken);
         await _accessTokenRepository.AddAsync(accessToken, cancellationToken);
         await _accessTokenRepository.SaveChangesAsync(cancellationToken);
         return string.Format(_multiPostingOptions.RedirectContent,
-            $"{_multiPostingOptions.RedirectUrl}?id={response.Data.User.DisplayName}");
+            $"{_tikTokOptions.RedirectApplicationUrl}?id={response.Data.User.OpenId}&social_media={SocialMedia.TikTok}");
     }
 
     private string GenerateAuthUrl()

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Share.Application.Enums;
+using Shared.Application.Enums;
 
 namespace IdentityServer.Application.Dto;
 

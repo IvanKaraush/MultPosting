@@ -7,7 +7,7 @@ using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Options;
 using MultiPosting.Application.Dto;
 using MultiPosting.Application.Interfaces;
-using Share.Application.Options;
+using Shared.Application.Options;
 using Shared.Infrastructure.Interfaces;
 
 namespace MultiPosting.Application.Services;
@@ -81,7 +81,7 @@ public class YoutubeService : IYoutubeService
             youtubeChannels.Add(new UserResourceDto
             {
                 Name = channel.Snippet.Title,
-                ThumbnailUrl = thumbnailUrl
+                ImageUrl = thumbnailUrl
             });
         }
 

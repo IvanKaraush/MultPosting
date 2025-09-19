@@ -1,7 +1,7 @@
 ﻿using IdentityServer.Application.Dto;
 using IdentityServer.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Application.Enums;
+using Shared.Domain.Enums;
 
 namespace IdentityServer.Api.Controllers;
 

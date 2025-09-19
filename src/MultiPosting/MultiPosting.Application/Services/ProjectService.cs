@@ -26,6 +26,15 @@ public class ProjectService : IProjectService
         return project.Adapt<GetUserResourcesByProjectIdResponse>();
     }
 
+    public async Task<List<UserResourceDto>> GetIsSelectedUserResourcesByProjectIdAsync(Guid projectId)
+    {
+        var project = await _projectRepository.GetFullById(projectId)
+                      ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound,
+                          projectId));
+        return project.UserResources.Where(c => c.IsSelected).ToList().Adapt<List<UserResourceDto>>();
+
+    }
+
     public async Task<Guid> CreateProjectAsync(CreateProjectRequest request)
     {
         var project = new Project(Guid.NewGuid(), request.Name);
@@ -40,7 +49,7 @@ public class ProjectService : IProjectService
                       ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.EntityNotFound,
                           request.ProjectId));
         request.UserResourcesDto.ForEach(c =>
-            project.AddUserResourceIfNotExist(Guid.NewGuid(), c.Name, c.ImageUrl, c.IsSelected));
+            project.AddUserResourceIfNotExist(Guid.NewGuid(), c.Name, c.ImageUrl, c.IsSelected, c.SocialMedia));
         await _projectRepository.SaveChangesAsync();
     }
 

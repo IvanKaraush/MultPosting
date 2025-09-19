@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiPosting.Application.Interfaces;
 using MultiPosting.Application.Services;
-using Shared.Application.Enums;
+using Shared.Domain.Enums;
 
 namespace MultiPosting.Application.Factories;
 

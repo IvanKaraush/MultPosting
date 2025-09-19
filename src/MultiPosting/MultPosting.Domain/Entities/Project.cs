@@ -1,5 +1,6 @@
 ﻿using MultPosting.Domain.Primitives;
 using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
 
 namespace MultPosting.Domain.Entities;
@@ -21,12 +22,12 @@ public class Project : BaseEntity
         _userResources = [];
     }
 
-    public void AddUserResourceIfNotExist(Guid id, string name, string imageUrl, bool isSelected)
+    public void AddUserResourceIfNotExist(Guid id, string name, string imageUrl, bool isSelected, SocialMedia socialMedia)
     {
         var userResource = _userResources.FirstOrDefault(c => c.Id == id);
         if (userResource == null)
         {
-            _userResources.Add(new UserResource(id, name, imageUrl, isSelected));
+            _userResources.Add(new UserResource(id, name, imageUrl, isSelected, socialMedia));
         }
     }
 

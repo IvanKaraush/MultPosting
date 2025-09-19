@@ -1,8 +1,12 @@
-﻿namespace MultiPosting.Application.Dto;
+﻿using Shared.Domain.Enums;
+
+namespace MultiPosting.Application.Dto;
 
 public class UserResourceDto
 {
+    public Guid Id { get; init; }
     public string Name { get; init; }
     public string ImageUrl  { get; init; }
     public bool IsSelected  { get; init; }
+    public SocialMedia SocialMedia { get; init; }
 }

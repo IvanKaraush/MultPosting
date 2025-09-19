@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MultiPosting.Infrastructure.Interfaces;
 using MultiPosting.Infrastructure.Repositories;
+using Shared.Domain.Enums;
 using Shared.Infrastructure.Interfaces;
 using Shared.Infrastructure.Services;
 
@@ -13,6 +14,6 @@ public static class DependencyInjectionExtensions
     {
         services.AddScoped<IHttpProvider, HttpProvider>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
-        services.AddNpgsql<MultiPostingDbContext>(configuration.GetConnectionString("DefaultConnection"));
+        services.AddNpgsql<MultiPostingDbContext>(configuration.GetConnectionString("DefaultConnection"), c => c.MapEnum<SocialMedia>());
     }
 }

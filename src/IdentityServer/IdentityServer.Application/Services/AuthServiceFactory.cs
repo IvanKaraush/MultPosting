@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Application.Enums;
+using Shared.Domain.Enums;
 
 namespace IdentityServer.Application.Services;
 

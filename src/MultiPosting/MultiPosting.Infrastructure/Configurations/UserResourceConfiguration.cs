@@ -12,5 +12,7 @@ public class UserResourceConfiguration : IEntityTypeConfiguration<UserResource>
 
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id).ValueGeneratedNever();
+
+        builder.Property(c => c.SocialMedia).HasColumnType("social_media");
     }
 }

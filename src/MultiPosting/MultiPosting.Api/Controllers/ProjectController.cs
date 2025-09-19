@@ -22,6 +22,13 @@ public class ProjectController : ControllerBase
         return Ok(userResources);
     }
 
+    [HttpGet("user-resources/{projectId:guid}")]
+    public async Task<IActionResult> GetIsSelectedUserResources(Guid projectId)
+    {
+        var userResources = await _projectService.GetIsSelectedUserResourcesByProjectIdAsync(projectId);
+        return Ok(userResources);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
     {
@@ -35,7 +42,7 @@ public class ProjectController : ControllerBase
         await _projectService.CreateUserResourcesToProjectAsync(request);
         return NoContent();
     }
-    
+
     [HttpDelete]
     public async Task<IActionResult> DeleteUserResource([FromQuery] DeleteUserResourceRequest request)
     {

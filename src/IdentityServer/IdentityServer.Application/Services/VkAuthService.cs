@@ -7,9 +7,9 @@ using IdentityServer.Application.Primitives;
 using IdentityServer.Domain.Entities;
 using IdentityServer.Infrastructure.Interfaces;
 using Microsoft.Extensions.Options;
-using Shared.Application.Enums;
 using Shared.Application.Exceptions;
 using Shared.Application.Options;
+using Shared.Domain.Enums;
 using Shared.Infrastructure.Interfaces;
 
 namespace IdentityServer.Application.Services;
